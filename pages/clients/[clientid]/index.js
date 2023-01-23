@@ -8,8 +8,8 @@ function ClientProjectsPage() {
   function loadProjectHandler() {
     // load data...
     router.push({
-        pathname: '/clients/[clientid]/[clientprojectid]',
-        query: {clientid: 'max', clientprojectid: 'projecta'}
+      pathname: "/clients/[clientid]/[clientprojectid]",
+      query: { clientid: "max", clientprojectid: "projecta" },
     });
   }
 
