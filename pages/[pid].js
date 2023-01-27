@@ -7,8 +7,8 @@ function ProductPage(props) {
 
   //if fallback is set to "blocking" rather than true/false
   //This if statement is not needed.
-  if(!loadedProduct){
-    return <p>Loading...</p>
+  if (!loadedProduct) {
+    return <p>Loading...</p>;
   }
 
   return (
@@ -19,14 +19,20 @@ function ProductPage(props) {
   );
 }
 
+async function getData() {
+  const filePath = path.join(process.cwd(), "data", "dummy-backend.json");
+  const jsonData = await fs.readFile(filePath);
+  const data = JSON.parse(jsonData);
+
+  return data;
+}
+
 export async function getStaticProps(context) {
   const { params } = context;
 
   const productId = params.pid;
 
-  const filePath = path.join(process.cwd(), "data", "dummy-backend.json");
-  const jsonData = await fs.readFile(filePath);
-  const data = JSON.parse(jsonData);
+  const data = await getData();
 
   const product = data.products.find((product) => product.id === productId);
 
@@ -38,10 +44,16 @@ export async function getStaticProps(context) {
 }
 
 export async function getStaticPaths() {
-  return {
-    paths: [{ params: { pid: "p1" } }],
+  const data = await getData();
 
-    fallback: true,
+  const ids = data.products.map((product) => product.id);
+
+  const pathsWithParams = ids.map((id) => ({ params: { pid: id } }));
+
+  return {
+    paths: pathsWithParams,
+
+    fallback: false,
   };
 }
 
