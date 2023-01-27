@@ -5,6 +5,12 @@ import path from "path";
 function ProductPage(props) {
   const { loadedProduct } = props;
 
+  //if fallback is set to "blocking" rather than true/false
+  //This if statement is not needed.
+  if(!loadedProduct){
+    return <p>Loading...</p>
+  }
+
   return (
     <Fragment>
       <h1>{loadedProduct.title}</h1>
@@ -33,13 +39,9 @@ export async function getStaticProps(context) {
 
 export async function getStaticPaths() {
   return {
-    paths: [
-      { params: { pid: "p1" } },
-      { params: { pid: "p2" } },
-      { params: { pid: "p3" } },
-    ],
+    paths: [{ params: { pid: "p1" } }],
 
-    fallback: false
+    fallback: true,
   };
 }
 
