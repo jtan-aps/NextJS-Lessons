@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
 import useSWR from "swr";
+import Head from "next/head";
 
 import { getFilteredEvents } from "../../helpers/api-util";
 import EventList from "../../components/events/event-list";
@@ -17,9 +18,8 @@ function FilteredEventsPage(props) {
   const url =
     "https://nextjs-course-8c50f-default-rtdb.firebaseio.com/events.json";
 
-  const { data, error } = useSWR(
-    url,
-    (url) => fetch(url).then(res => res.json())
+  const { data, error } = useSWR(url, (url) =>
+    fetch(url).then((res) => res.json())
   );
 
   useEffect(() => {
@@ -71,7 +71,8 @@ function FilteredEventsPage(props) {
   const filteredEvents = events.filter((event) => {
     const eventDate = new Date(event.date);
     return (
-      eventDate.getFullYear() === numYear && eventDate.getMonth() === numMonth - 1
+      eventDate.getFullYear() === numYear &&
+      eventDate.getMonth() === numMonth - 1
     );
   });
 
@@ -92,6 +93,13 @@ function FilteredEventsPage(props) {
 
   return (
     <Fragment>
+      <Head>
+        <title>Filtered Events</title>
+        <meta
+          name="description"
+          content={`All events for ${numMonth / numYear}.`}
+        />
+      </Head>
       <ResultsTitle date={date} />
       <EventList items={filteredEvents} />
     </Fragment>
