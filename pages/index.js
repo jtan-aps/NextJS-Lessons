@@ -4,13 +4,26 @@ function HomePage() {
   const emailInputRef = useRef();
   const feedbackInputRef = useRef();
 
-  function submitFormHandler(event){
+  function submitFormHandler(event) {
     event.preventDefault();
 
     const enteredEmail = emailInputRef.current.value;
     const enteredFeedback = feedbackInputRef.current.value;
 
-    fetch(); // { email: 'test@test.com', text: 'Some feedback text' }
+    const reqBody = {
+      email: enteredEmail,
+      text: enteredFeedback,
+    };
+
+    fetch("/api/feedback", {
+      method: "POST",
+      body: JSON.stringify(reqBody),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data));
   }
 
   return (
@@ -19,7 +32,7 @@ function HomePage() {
       <form onSubmit={submitFormHandler}>
         <div>
           <label htmlFor="email">Your email address</label>
-          <input type="email" id="email" ref={emailInputRef}/>
+          <input type="email" id="email" ref={emailInputRef} />
         </div>
         <div>
           <label htmlFor="feedback">Your feedback</label>
