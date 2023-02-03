@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 
 import CommentList from "./comment-list";
 import NewComment from "./new-comment";
 import classes from "./comments.module.css";
+import NotificationContext from "../../store/notification-context";
 
 function Comments(props) {
+  const notificationCtx = useContext(NotificationContext);
+
   const { eventId } = props;
 
   const [showComments, setShowComments] = useState(false);
