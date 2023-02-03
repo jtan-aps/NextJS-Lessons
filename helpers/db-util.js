@@ -16,10 +16,14 @@ export async function insertDocument(client, collection, document) {
   return result;
 }
 
-export async function getAllDocuments(client, collection, sort) {
+export async function getAllDocuments(client, collection, sort, filter = {}) {
   const db = client.db();
 
-  const results = await db.collection(collection).find().sort(sort).toArray();
+  const results = await db
+    .collection(collection)
+    .find(filter)
+    .sort(sort)
+    .toArray();
 
   return results;
 }
