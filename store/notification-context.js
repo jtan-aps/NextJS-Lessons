@@ -2,13 +2,37 @@ import { createContext, useState } from "react";
 
 const NotificationContext = createContext({
   notification: null, // will become {title, message, status}
-  showNotification: function () {},
+  showNotification: function (notificationData) {},
   hideNotification: function () {},
 });
 
 export function NotificationContextProvider(props) {
+  const [activeNotification, setActiveNotification] = useState();
+
+  function showNotificationHandler(notificationData) {
+    setActiveNotification({
+      title: notificationData.title,
+      message: notificationData.message,
+      status: notificationData.status,
+    });
+
+    // Can also just be
+    // setActiveNotification(notificationData);
+    // Since objects are exactly equal,
+  }
+
+  function hideNotificationHandler() {
+    setActiveNotification(null);
+  }
+
+  const context = {
+    notification: activeNotification,
+    showNotification: showNotificationHandler,
+    hideNotificationHandler: hideNotificationHandler,
+  };
+
   return (
-    <NotificationContext.Provider>
+    <NotificationContext.Provider value={context}>
       {props.children}
     </NotificationContext.Provider>
   );
