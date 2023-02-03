@@ -1,11 +1,17 @@
-function handler(req, res) {
+import { MongoClient } from "mongodb";
+
+async function handler(req, res) {
   const eventId = req.query.eventId;
+
+  const client = await MongoClient.connect(
+    "mongodb+srv://dbUser:qudLfQLanl9VGKrQ@cluster0.xbdsnbp.mongodb.net/?retryWrites=true&w=majority"
+  );
 
   if (req.method === "POST") {
     // add server-side validation
     const { email, name, text } = req.body;
     if (
-      !email.includes('@') ||
+      !email.includes("@") ||
       !name ||
       name.trim() === "" ||
       !text ||
@@ -16,13 +22,19 @@ function handler(req, res) {
     }
 
     const newComment = {
-      id: new Date().toISOString(),
       email,
       name,
       text,
+      eventId,
     };
 
-    console.log(newComment);
+    const db = client.db();
+
+    const result = await db.collection("comments").insertOne(newComment);
+
+    newComment.id = result.insertedId;
+
+    console.log(result);
 
     res.status(201).json({ message: "Comment added", comment: newComment });
   } else if (req.method === "GET") {
@@ -33,6 +45,8 @@ function handler(req, res) {
 
     res.status(200).json({ comments: dummyList });
   }
+
+  client.close();
 }
 
 export default handler;
